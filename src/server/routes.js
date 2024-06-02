@@ -1,4 +1,4 @@
-const postPredictHandler = require('../server/handler');
+const { postPredictHandler, postForumHandler, getAllForumHandler, getAllClinicHandler } = require('../server/handler');
  
 const routes = [
   {
@@ -29,7 +29,12 @@ const routes = [
     path: '/forum',
     method: 'GET',
     handler: getAllForumHandler
-  }
+  },
+  {
+    path: '/clinic',
+    method: 'GET',
+    handler: getAllClinicHandler
+  },
 ]
  
 module.exports = routes;
