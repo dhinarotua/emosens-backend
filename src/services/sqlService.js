@@ -13,7 +13,25 @@ async function saveUser(data) {
 
     connection.query(query, [fullName, email, password, childName, childBirthday, adhdDesc])
 }
+
+async function getAllClinic() {
+    // const query = "SELECT * FROM clinics"
+
+    // connection.query(query)
+
+    return new Promise((resolve, reject) => {
+        const query = "SELECT * FROM clinics";
+        connection.query(query, (err, rows) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(rows);
+            }
+        });
+    });
+}
  
 module.exports = {
-    saveUser
+    saveUser,
+    getAllClinic
 };

@@ -1,7 +1,7 @@
 const predictClassification = require('../services/inferenceService');
 const crypto = require('crypto');
 const storeData = require('../services/storeData');
-const { saveUser } = require('../services/sqlService');
+const { saveUser, getAllClinic } = require('../services/sqlService');
 
 async function postPredictHandler(request, h) {
     const { user_id, image } = request.payload;
@@ -78,13 +78,13 @@ async function getAllForumHandler(request, h) {
 }
 
 async function getAllClinicHandler(request, h) {
-    // TO DO: Make service for getAllClinic()
-    // const data = await getAllClinic();
+    const data = await getAllClinic();
   
     const response = h.response({
-      status: 'success',
-      data
+        status: 'success',
+        data
     });
+    
     response.code(200);
     return response;
 }
