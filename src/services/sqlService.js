@@ -8,10 +8,22 @@ const connection = mysql.createConnection({
 })
  
 async function saveUser(data) {
-    const { fullName, email, password, childName, childBirthday, adhdDesc } = data;
-    const query = "INSERT INTO user (name, email, password, childName, childBirthday, adhdDesc) values (?, ?, ?, ?, ?, ?)"
+    return new Promise((resolve, reject) => {
+        const { fullName, email, password, childName, childBirthday, adhdDesc } = data;
+        const query = "INSERT INTO user (name, email, password, childName, childBirthday, adhdDesc) values (?, ?, ?, ?, ?, ?)"
 
-    connection.query(query, [fullName, email, password, childName, childBirthday, adhdDesc])
+        connection.query(query, [fullName, email, password, childName, childBirthday, adhdDesc], (err) => {
+            if (err) {
+                if (err.code === 'ER_DUP_ENTRY') {
+                    reject(new Error('Email is already registered'));
+                } else {
+                    reject(err);
+                 }
+            } else {
+                resolve(true);
+            }
+        });
+    });
 }
 
 async function getAllClinic() {

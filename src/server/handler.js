@@ -120,7 +120,7 @@ async function postSignupHandler(request, h) {
     // response.code(201);
     // return response;
 
-    if (!payload.fullName || !payload.email || !payload.password || !payload.childName || !payload.childBirthday) {
+    if (!fullName || !email || !password || !childName || !childBirthday) {
         return h.response({
             status: 'fail',
             message: 'Missing required field'
@@ -141,7 +141,7 @@ async function postSignupHandler(request, h) {
             status: 'fail',
             message: err.message
         });
-        response.code(500);
+        response.code(400);
         return response;
     }
 }
