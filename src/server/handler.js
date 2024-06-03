@@ -170,7 +170,7 @@ async function postLoginHandler(request, h) {
         const response = h.response({
             status: 'success',
             message: 'User has been login successfully.',
-            email
+            result
         });
         response.code(200);
         return response;
