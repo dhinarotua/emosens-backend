@@ -54,7 +54,7 @@ async function login(data) {
             }
 
             if (row.length === 0) {
-                return reject(new Error('Username is not valid'));
+                return reject(new Error('Email is not valid'));
             }
 
             if (row[0].password === password) {
@@ -65,9 +65,27 @@ async function login(data) {
         });
     });
 }
+
+async function getProfile(id) {
+    return new Promise((resolve, reject) => {
+        const query = "SELECT * FROM user WHERE id = ?";
+        connection.query(query, [id], (err, row) => {
+            if (err) {
+                return reject(err);
+            }
+
+            if (row.length === 0) {
+                reject(new Error('ID is not valid'));
+            } else {
+                resolve(row);
+            }
+        });
+    });
+}
  
 module.exports = {
     saveUser,
     getAllClinic,
-    login
+    login,
+    getProfile
 };

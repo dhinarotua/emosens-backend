@@ -1,4 +1,4 @@
-const { postPredictHandler, postForumHandler, getAllForumHandler, getAllClinicHandler, postSignupHandler, postLoginHandler } = require('../server/handler');
+const { postPredictHandler, postForumHandler, getAllForumHandler, getAllClinicHandler, postSignupHandler, postLoginHandler, getProfileHandler } = require('../server/handler');
  
 const routes = [
   {
@@ -58,6 +58,11 @@ const routes = [
         parse: true
       }
     }
+  },
+  {
+    path: '/profile/{id}',
+    method: 'GET',
+    handler: getProfileHandler,
   },
 ]
  

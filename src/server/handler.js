@@ -1,7 +1,7 @@
 const predictClassification = require('../services/inferenceService');
 const crypto = require('crypto');
 const storeData = require('../services/storeData');
-const { saveUser, getAllClinic, login } = require('../services/sqlService');
+const { saveUser, getAllClinic, login, getProfile } = require('../services/sqlService');
 
 async function postPredictHandler(request, h) {
     const { user_id, image } = request.payload;
@@ -184,11 +184,41 @@ async function postLoginHandler(request, h) {
     }
 }
 
+async function getProfileHandler(request, h) {
+    const id = request.params.id;
+
+    if (!id) {
+        return h.response({
+            status: 'fail',
+            message: 'Missing required field'
+        }).code(400); // Bad request
+    }
+
+    try {
+        // Passwordnya masih ikutan
+        const data = await getProfile(id);
+        const response = h.response({
+            status: 'success',
+            data
+        });
+        response.code(200);
+        return response;
+    } catch (err) {
+        const response = h.response({
+            status: 'fail',
+            message: err.message
+        });
+        response.code(400);
+        return response;
+    }
+}
+
 module.exports = {
     postPredictHandler,
     postForumHandler,
     getAllForumHandler,
     getAllClinicHandler,
     postSignupHandler,
-    postLoginHandler
+    postLoginHandler,
+    getProfileHandler
 };
