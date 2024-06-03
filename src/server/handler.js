@@ -1,6 +1,7 @@
 const predictClassification = require('../services/inferenceService');
 const crypto = require('crypto');
 const storeData = require('../services/storeData');
+const { saveUser } = require('../services/sqlService');
 
 async function postPredictHandler(request, h) {
     const { user_id, image } = request.payload;
@@ -88,9 +89,67 @@ async function getAllClinicHandler(request, h) {
     return response;
 }
 
+async function postSignupHandler(request, h) {
+    const payload = request.payload;
+  
+    // Extract payload
+    const fullName = payload.fullName;
+    const email = payload.email;
+    const password = payload.password;
+    const childName = payload.childName;
+    const childBirthday = new Date(payload.childBirthday);
+    const adhdDesc = payload.adhdDesc;
+
+    const data = {
+        "fullName": fullName,
+        "email": email,
+        "password": password,
+        "childName": childName,
+        "childBirthday": childBirthday,
+        "adhdDesc": adhdDesc
+    }
+
+    // await saveUser(data);
+  
+    // const response = h.response({
+    //     status: 'success',
+    //     message: 'User has been successfully created.',
+    //     data
+    // })
+
+    // response.code(201);
+    // return response;
+
+    if (!payload.fullName || !payload.email || !payload.password || !payload.childName || !payload.childBirthday) {
+        return h.response({
+            status: 'fail',
+            message: 'Missing required field'
+        }).code(400); // Bad request
+    }
+
+    try {
+        const result = await saveUser(data);
+        const response = h.response({
+            status: 'success',
+            message: 'User has been successfully created.',
+            data
+        });
+        response.code(201);
+        return response;
+    } catch (err) {
+        const response = h.response({
+            status: 'fail',
+            message: err.message
+        });
+        response.code(500);
+        return response;
+    }
+}
+
 module.exports = {
     postPredictHandler,
     postForumHandler,
     getAllForumHandler,
-    getAllClinicHandler
+    getAllClinicHandler,
+    postSignupHandler
 };
