@@ -1,4 +1,4 @@
-const { postPredictHandler, postForumHandler, getAllForumHandler, getAllClinicHandler, postSignupHandler } = require('../server/handler');
+const { postPredictHandler, postForumHandler, getAllForumHandler, getAllClinicHandler, postSignupHandler, postLoginHandler } = require('../server/handler');
  
 const routes = [
   {
@@ -39,6 +39,18 @@ const routes = [
     path: '/signup',
     method: 'POST',
     handler: postSignupHandler,
+    options: {
+      payload: {
+        allow: ['application/json'],
+        output: 'data',
+        parse: true
+      }
+    }
+  },
+  {
+    path: '/login',
+    method: 'POST',
+    handler: postLoginHandler,
     options: {
       payload: {
         allow: ['application/json'],

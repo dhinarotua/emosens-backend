@@ -30,8 +30,32 @@ async function getAllClinic() {
         });
     });
 }
+
+async function login(data) {
+    return new Promise((resolve, reject) => {
+        const { email, password } = data;
+
+        const query = "SELECT * FROM user WHERE email = ?";
+        connection.query(query, [email], (err, row) => {
+            if (err) {
+                return reject(err);
+            }
+
+            if (row.length === 0) {
+                return reject(new Error('Username is not valid'));
+            }
+
+            if (row[0].password === password) {
+                resolve(row);
+            } else {
+                reject(new Error('Password is incorrect'));
+            }
+        });
+    });
+}
  
 module.exports = {
     saveUser,
-    getAllClinic
+    getAllClinic,
+    login
 };
