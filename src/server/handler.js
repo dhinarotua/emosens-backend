@@ -5,27 +5,23 @@ const { saveUser, getAllClinic, login, getProfile } = require('../services/sqlSe
 
 async function postPredictHandler(request, h) {
     const { user_id, image } = request.payload;
+    const { model } = request.server.app;
 
-    // TO DO: Get model
-    // const { model } = request.server.app;
-
-    // TO DO: Processing model
-    // const { result, confidence_score, explanation, suggestion } = await predictClassification(model, image);
+    const { confidenceScore, label, explanation, suggestion } = await predictClassification(model, image);
     const prediction_id = crypto.randomUUID();
     const created_at = new Date().toISOString();
 
     const data = {
         "prediction_id": prediction_id,
         "user_id": user_id,
-        "result": result,
-        "confidence_score": confidence_score,
+        "confidence_score": confidenceScore,
+        "label": label,
         "explanation": explanation,
         "suggestion": suggestion,
         "created_at": created_at
     }
 
-    // TO DO: Store data
-    // await storeData(id, data);
+    await storeData(id, data);
 
     const response = h.response({
         status: 'success',
@@ -196,7 +192,21 @@ async function getProfileHandler(request, h) {
 
     try {
         // Passwordnya masih ikutan
-        const data = await getProfile(id);
+        const output = await getProfile(id);
+
+        const day = output[0].childBirthday.getDate();
+        const month = output[0].childBirthday.getMonth() + 1;
+        const year = output[0].childBirthday.getFullYear();
+        const formattedBirthdayDate = `${day}-${month}-${year}`;
+
+        const data = {
+            "fullName": output[0].name,
+            "email": output[0].email,
+            "childName": output[0].childName,
+            "childBirthday": formattedBirthdayDate,
+            "adhdDesc": output[0].adhdDesc
+        }
+
         const response = h.response({
             status: 'success',
             data
@@ -208,7 +218,7 @@ async function getProfileHandler(request, h) {
             status: 'fail',
             message: err.message
         });
-        response.code(400);
+        response.code(404);
         return response;
     }
 }
