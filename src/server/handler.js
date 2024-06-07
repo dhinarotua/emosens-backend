@@ -2,6 +2,7 @@ const predictClassification = require('../services/inferenceService');
 const crypto = require('crypto');
 const storeData = require('../services/storeData');
 const { saveUser, getAllClinic, login, getProfile } = require('../services/sqlService');
+const getData = require('../services/getData');
 
 async function postPredictHandler(request, h) {
     const { user_id, image } = request.payload;
@@ -223,6 +224,17 @@ async function getProfileHandler(request, h) {
     }
 }
 
+async function getAllSpeechHandler(request, h) {
+    const data = await getData();
+
+    const response = h.response({
+      status: 'success',
+      data
+    });
+    response.code(200);
+    return response;
+}
+
 module.exports = {
     postPredictHandler,
     postForumHandler,
@@ -230,5 +242,6 @@ module.exports = {
     getAllClinicHandler,
     postSignupHandler,
     postLoginHandler,
-    getProfileHandler
+    getProfileHandler,
+    getAllSpeechHandler
 };
