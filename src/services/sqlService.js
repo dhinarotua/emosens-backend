@@ -100,7 +100,12 @@ async function saveForum(data) {
 
 async function getForumbyId(id) {
     return new Promise((resolve, reject) => {
-        const query = "SELECT * FROM forum WHERE id = ?";
+        const query = `
+            SELECT forum.*, user.name AS userName
+            FROM forum 
+            JOIN user ON forum.userId = user.id 
+            WHERE forum.id = ?
+        `;
         connection.query(query, [id], (err, rows) => {
             if (err) {
                 return reject(err);
@@ -117,7 +122,11 @@ async function getForumbyId(id) {
 
 async function getAllForum() {
     return new Promise((resolve, reject) => {
-        const query = "SELECT * FROM forum";
+        const query = `
+            SELECT forum.*, user.name AS userName
+            FROM forum 
+            JOIN user ON forum.userId = user.id 
+        `;
         connection.query(query, (err, rows) => {
             if (err) {
                 reject(err);
