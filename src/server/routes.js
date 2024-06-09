@@ -1,4 +1,15 @@
-const { postPredictHandler, postForumHandler, getAllForumHandler, getAllClinicHandler, postSignupHandler, postLoginHandler, getProfileHandler, getAllSpeechHandler } = require('../server/handler');
+const { 
+  postPredictHandler, 
+  postForumHandler, 
+  getAllForumHandler, 
+  getAllClinicHandler, 
+  postSignupHandler, 
+  postLoginHandler, 
+  getProfileHandler, 
+  getAllSpeechHandler, 
+  getSpeechByIdHandler,
+  getForumByIdHandler
+ } = require('../server/handler');
  
 const routes = [
   {
@@ -29,6 +40,11 @@ const routes = [
     path: '/forum',
     method: 'GET',
     handler: getAllForumHandler
+  },
+  {
+    path: '/forum/{id}',
+    method: 'GET',
+    handler: getForumByIdHandler
   },
   {
     path: '/clinic',
@@ -68,6 +84,11 @@ const routes = [
     path: '/speech',
     method: 'GET',
     handler: getAllSpeechHandler,
+  },
+  {
+    path: '/speech/{id}',
+    method: 'GET',
+    handler: getSpeechByIdHandler,
   },
 ]
  

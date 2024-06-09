@@ -82,10 +82,58 @@ async function getProfile(id) {
         });
     });
 }
+
+async function saveForum(data) {
+    return new Promise((resolve, reject) => {
+        const { judul, isi, userId } = data;
+        const query = "INSERT INTO forum (judul, isi, userId) VALUES (?, ?, ?)";
+
+        connection.query(query, [judul, isi, userId], (err) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(true);
+            }
+        });
+    });
+}
+
+async function getForumbyId(id) {
+    return new Promise((resolve, reject) => {
+        const query = "SELECT * FROM forum WHERE id = ?";
+        connection.query(query, [id], (err, rows) => {
+            if (err) {
+                return reject(err);
+            }
+
+            if (rows.length === 0) {
+                reject(new Error('ID is not valid'));
+            } else {
+                resolve(rows[0]);
+            }
+        });
+    });
+}
+
+async function getAllForum() {
+    return new Promise((resolve, reject) => {
+        const query = "SELECT * FROM forum";
+        connection.query(query, (err, rows) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(rows);
+            }
+        });
+    });
+}
  
 module.exports = {
     saveUser,
     getAllClinic,
     login,
-    getProfile
+    getProfile,
+    saveForum,
+    getForumbyId,
+    getAllForum
 };

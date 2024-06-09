@@ -21,6 +21,15 @@ CREATE TABLE clinics (
     phone VARCHAR(255)
 );
 
+CREATE TABLE forum (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    judul VARCHAR(255) NOT NULL,
+    isi TEXT NOT NULL,
+    createdAt DATETIME DEFAULT CURRENT_TIMESTAMP,
+    userId INT,
+    FOREIGN KEY (userId) REFERENCES user(id)
+);
+
 INSERT INTO clinics (clinic_name, streetAddress, province, city, suburb, phone)
 VALUES ('ADHD Centre Concentration First', 
     'Ruko Diamond Blok DMD 3 No 58-59, Gading, Serpong, Pakulonan Bar., Kec. Tangerang, Kabupaten Tangerang, Banten 15810', 
