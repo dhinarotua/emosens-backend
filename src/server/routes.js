@@ -8,7 +8,8 @@ const {
   getProfileHandler, 
   getAllSpeechHandler, 
   getSpeechByIdHandler,
-  getForumByIdHandler
+  getForumByIdHandler,
+  postReplyHandler
  } = require('../server/handler');
  
 const routes = [
@@ -89,6 +90,11 @@ const routes = [
     path: '/speech/{id}',
     method: 'GET',
     handler: getSpeechByIdHandler,
+  },
+  {
+    path: '/reply/upload',
+    method: 'POST',
+    handler: postReplyHandler,
   },
 ]
  

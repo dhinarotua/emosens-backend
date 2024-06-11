@@ -136,6 +136,43 @@ async function getAllForum() {
         });
     });
 }
+
+async function saveReply(data) {
+    return new Promise((resolve, reject) => {
+        const { forumId, userId, isi } = data;
+        const query = "INSERT INTO reply (forumId, userId, isi) VALUES (?, ?, ?)";
+
+        connection.query(query, [forumId, userId, isi], (err) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(true);
+            }
+        });
+    });
+}
+
+async function getReplyByForumId(id) {
+    return new Promise((resolve, reject) => {
+        const query = `
+            SELECT reply.*, user.name AS userName
+            FROM reply 
+            JOIN user ON reply.userId = user.id 
+            WHERE reply.forumId = ?
+        `;
+        connection.query(query, [id], (err, rows) => {
+            if (err) {
+                return reject(err);
+            }
+
+            if (rows.length === 0) {
+                reject(new Error('ID is not valid'));
+            } else {
+                resolve(rows[0]);
+            }
+        });
+    });
+}
  
 module.exports = {
     saveUser,
@@ -144,5 +181,7 @@ module.exports = {
     getProfile,
     saveForum,
     getForumbyId,
-    getAllForum
+    getAllForum,
+    saveReply,
+    getReplyByForumId
 };

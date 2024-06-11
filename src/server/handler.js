@@ -1,7 +1,7 @@
 const predictClassification = require('../services/inferenceService');
 const crypto = require('crypto');
 const { storeData } = require('../services/storeData');
-const { saveUser, getAllClinic, login, getProfile, saveForum, getForumbyId, getAllForum } = require('../services/sqlService');
+const { saveUser, getAllClinic, login, getProfile, saveForum, getForumbyId, getAllForum, saveReply, getReplyByForumId } = require('../services/sqlService');
 const { getData, getSpeechById } = require('../services/getData');
 
 async function postPredictHandler(request, h) {
@@ -88,27 +88,19 @@ async function getAllForumHandler(request, h) {
 
 async function getForumByIdHandler(request, h) {
     const { id } = request.params;
-    const data = await getForumbyId(id);
+    const forum = await getForumbyId(id);
+    const replies = await getReplyByForumId(id);
 
     const response = h.response({
         status: 'success',
-        data
+        data: {
+            forum: forum,
+            replies: replies,
+        },
     });
     response.code(200);
     return response;
 }
-
-// async function getSpeechByIdHandler(request, h) {
-//     const { id } = request.payload;
-//     const data = await getSpeechById(id);
-
-//     const response = h.response({
-//         status: 'success',
-//         data
-//     });
-//     response.code(200);
-//     return response;
-// }
 
 async function getAllClinicHandler(request, h) {
     const data = await getAllClinic();
@@ -283,6 +275,47 @@ async function getSpeechByIdHandler(request, h) {
     return response;
 }
 
+async function postReplyHandler(request, h) {
+    const payload = request.payload;
+  
+    // Extract payload
+    const userId = parseInt(payload.userId, 10);
+    const forumId = parseInt(payload.forumId, 10);
+    const isi = payload.isi;
+
+    const data = {
+        "userId": userId,
+        "isi" : isi,
+        "forumId" : forumId,
+    }
+
+    // TO DO: Store data
+    if (!userId || !isi || !forumId) {
+        return h.response({
+            status: 'fail',
+            message: 'Missing required field'
+        }).code(400); // Bad request
+    }
+
+    try {
+        await saveReply(data);
+        const response = h.response({
+            status: 'success',
+            message: 'Reply has been successfully created.',
+            data
+        });
+        response.code(201);
+        return response;
+    } catch (err) {
+        const response = h.response({
+            status: 'fail',
+            message: err.message
+        });
+        response.code(400);
+        return response;
+    }
+}
+
 module.exports = {
     postPredictHandler,
     postForumHandler,
@@ -293,5 +326,6 @@ module.exports = {
     getProfileHandler,
     getAllSpeechHandler,
     getSpeechByIdHandler,
-    getForumByIdHandler
+    getForumByIdHandler,
+    postReplyHandler
 };
