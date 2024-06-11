@@ -1,7 +1,7 @@
 const predictClassification = require('../services/inferenceService');
 const crypto = require('crypto');
 const { storeData } = require('../services/storeData');
-const { saveUser, getAllClinic, login, getProfile, saveForum, getForumbyId, getAllForum, saveReply, getReplyByForumId } = require('../services/sqlService');
+const { saveUser, getAllClinic, login, getProfile, saveForum, getForumbyId, getAllForum, saveReply, getReplyByForumId, updateProfile } = require('../services/sqlService');
 const { getData, getSpeechById } = require('../services/getData');
 
 async function postPredictHandler(request, h) {
@@ -316,6 +316,56 @@ async function postReplyHandler(request, h) {
     }
 }
 
+async function updateProfileHandler(request, h) {
+    const payload = request.payload;
+  
+    // Extract payload
+    // id, name, email, password, childName, childBirthday, adhdDesc
+    const id = parseInt(payload.id, 10);
+    const name = payload.name;
+    const email = payload.email;
+    const password = payload.password;
+    const childName = payload.childName;
+    const childBirthday = payload.childBirthday;
+    const adhdDesc = payload.adhdDesc;
+
+    const data = {
+        "id": id,
+        "name": name,
+        "email" : email,
+        "password" : password,
+        "childName" : childName,
+        "childBirthday" : childBirthday,
+        "adhdDesc" : adhdDesc,
+    }
+
+    // TO DO: Store data
+    if (!id || !name || !email || !password || !childName || !childBirthday || !adhdDesc) {
+        return h.response({
+            status: 'fail',
+            message: 'Missing required field'
+        }).code(400); // Bad request
+    }
+
+    try {
+        await updateProfile(data);
+        const response = h.response({
+            status: 'success',
+            message: 'Profile has been successfully updated.',
+            data
+        });
+        response.code(201);
+        return response;
+    } catch (err) {
+        const response = h.response({
+            status: 'fail',
+            message: err.message
+        });
+        response.code(400);
+        return response;
+    }
+}
+
 module.exports = {
     postPredictHandler,
     postForumHandler,
@@ -327,5 +377,6 @@ module.exports = {
     getAllSpeechHandler,
     getSpeechByIdHandler,
     getForumByIdHandler,
-    postReplyHandler
+    postReplyHandler,
+    updateProfileHandler
 };

@@ -9,7 +9,8 @@ const {
   getAllSpeechHandler, 
   getSpeechByIdHandler,
   getForumByIdHandler,
-  postReplyHandler
+  postReplyHandler,
+  updateProfileHandler
  } = require('../server/handler');
  
 const routes = [
@@ -95,6 +96,11 @@ const routes = [
     path: '/reply/upload',
     method: 'POST',
     handler: postReplyHandler,
+  },
+  {
+    path: '/profile/update',
+    method: 'PUT',
+    handler: updateProfileHandler,
   },
 ]
  

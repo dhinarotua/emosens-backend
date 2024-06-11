@@ -173,6 +173,38 @@ async function getReplyByForumId(id) {
         });
     });
 }
+
+async function updateProfile(data) {
+    return new Promise((resolve, reject) => {
+        const { id, name, email, password, childName, childBirthday, adhdDesc } = data;
+        const query = `
+            UPDATE user 
+            SET 
+                name = ?, 
+                email = ?, 
+                password = ?, 
+                childName = ?, 
+                childBirthday = ?, 
+                adhdDesc = ?
+            WHERE 
+                id = ?
+        `;
+
+        connection.query(query, [name, email, password, childName, childBirthday, adhdDesc, id], (err, rows) => {
+            if (err) {
+                if (err.code === 'ER_DUP_ENTRY') {
+                    reject(new Error('Email has already been taken'));
+                } else {
+                    reject(err);
+                }
+            } else if (rows.length === 0) {
+                reject(new Error('ID is not valid'));
+            } else {
+                resolve(true);
+            }
+        });
+    });
+}
  
 module.exports = {
     saveUser,
@@ -183,5 +215,6 @@ module.exports = {
     getForumbyId,
     getAllForum,
     saveReply,
-    getReplyByForumId
+    getReplyByForumId,
+    updateProfile
 };
