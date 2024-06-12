@@ -82,10 +82,139 @@ async function getProfile(id) {
         });
     });
 }
+
+async function saveForum(data) {
+    return new Promise((resolve, reject) => {
+        const { judul, isi, userId } = data;
+        const query = "INSERT INTO forum (judul, isi, userId) VALUES (?, ?, ?)";
+
+        connection.query(query, [judul, isi, userId], (err) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(true);
+            }
+        });
+    });
+}
+
+async function getForumbyId(id) {
+    return new Promise((resolve, reject) => {
+        const query = `
+            SELECT forum.*, user.name AS userName
+            FROM forum 
+            JOIN user ON forum.userId = user.id 
+            WHERE forum.id = ?
+        `;
+        connection.query(query, [id], (err, rows) => {
+            if (err) {
+                return reject(err);
+            }
+
+            if (rows.length === 0) {
+                reject(new Error('ID is not valid'));
+            } else {
+                resolve(rows[0]);
+            }
+        });
+    });
+}
+
+async function getAllForum() {
+    return new Promise((resolve, reject) => {
+        const query = `
+            SELECT forum.*, user.name AS userName
+            FROM forum 
+            JOIN user ON forum.userId = user.id 
+        `;
+        connection.query(query, (err, rows) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(rows);
+            }
+        });
+    });
+}
+
+async function saveReply(data) {
+    return new Promise((resolve, reject) => {
+        const { forumId, userId, isi } = data;
+        const query = "INSERT INTO reply (forumId, userId, isi) VALUES (?, ?, ?)";
+
+        connection.query(query, [forumId, userId, isi], (err) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(true);
+            }
+        });
+    });
+}
+
+async function getReplyByForumId(id) {
+    return new Promise((resolve, reject) => {
+        const query = `
+            SELECT reply.*, user.name AS userName
+            FROM reply 
+            JOIN user ON reply.userId = user.id 
+            WHERE reply.forumId = ?
+        `;
+        connection.query(query, [id], (err, rows) => {
+            if (err) {
+                return reject(err);
+            }
+
+            if (rows.length === 0) {
+                reject(new Error('ID is not valid'));
+            } else {
+                resolve(rows[0]);
+            }
+        });
+    });
+}
+
+async function updateProfile(data) {
+    return new Promise((resolve, reject) => {
+        const { id, name, email, password, childName, childBirthday, adhdDesc } = data;
+        const query = `
+            UPDATE user 
+            SET 
+                name = ?, 
+                email = ?, 
+                password = ?, 
+                childName = ?, 
+                childBirthday = ?, 
+                adhdDesc = ?
+            WHERE 
+                id = ?
+        `;
+
+        connection.query(query, [name, email, password, childName, childBirthday, adhdDesc, id], (err, rows) => {
+            if (err) {
+                if (err.code === 'ER_DUP_ENTRY') {
+                    reject(new Error('Email has already been taken'));
+                } else {
+                    reject(err);
+                }
+            } else if (rows.length === 0) {
+                reject(new Error('ID is not valid'));
+            } else {
+                resolve(true);
+            }
+        });
+    });
+}
  
 module.exports = {
     saveUser,
     getAllClinic,
     login,
-    getProfile
+    getProfile,
+    saveForum,
+    getForumbyId,
+    getAllForum,
+    saveReply,
+    getReplyByForumId,
+    updateProfile
 };
