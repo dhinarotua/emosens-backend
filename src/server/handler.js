@@ -88,18 +88,27 @@ async function getAllForumHandler(request, h) {
 
 async function getForumByIdHandler(request, h) {
     const { id } = request.params;
-    const forum = await getForumbyId(id);
-    const replies = await getReplyByForumId(id);
-
-    const response = h.response({
-        status: 'success',
-        data: {
-            forum: forum,
-            replies: replies,
-        },
-    });
-    response.code(200);
-    return response;
+    try {
+        const forum = await getForumbyId(id);
+        const replies = await getReplyByForumId(id);
+    
+        const response = h.response({
+            status: 'success',
+            data: {
+                forum: forum,
+                replies: replies,
+            },
+        });
+        response.code(200);
+        return response;
+    } catch (err) {
+        const response = h.response({
+            status: 'fail',
+            message: 'Forum not found.'
+        });
+        response.code(400);
+        return response;
+    }
 }
 
 async function getAllClinicHandler(request, h) {

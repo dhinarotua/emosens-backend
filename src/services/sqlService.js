@@ -165,11 +165,7 @@ async function getReplyByForumId(id) {
                 return reject(err);
             }
 
-            if (rows.length === 0) {
-                reject(new Error('ID is not valid'));
-            } else {
-                resolve(rows[0]);
-            }
+            resolve(rows);
         });
     });
 }
