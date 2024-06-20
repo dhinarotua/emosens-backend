@@ -10,9 +10,9 @@ EmoSense is an application that provides a place for people with ASD to practice
 
 ## Documentation
 - [APIs Documentation](https://documenter.getpostman.com/view/23364102/2sA3XQhh61)
-- [Entity Relationship Diagram](https://pages.github.com/)
-- [Information Architecture](https://pages.github.com/)
-- [Cloud Architecture](https://pages.github.com/)
+- [Entity Relationship Diagram](https://github.com/dhinarotua/emosens-backend/blob/main/documentation/erd.jpg)
+- [Information Architecture](https://github.com/dhinarotua/emosens-backend/blob/main/documentation/information_architecture.jpg)
+- [Cloud Architecture](https://github.com/dhinarotua/emosens-backend/blob/main/documentation/cloud_architecture.png)
 
 ## Local Installation
 Clone this repository:
